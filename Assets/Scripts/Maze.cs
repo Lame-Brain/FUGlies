@@ -27,7 +27,7 @@ public class Maze : MonoBehaviour
                 tile[x, y] = Instantiate(mazeTilePF, new Vector3(x, y, 0), mazeTilePF.transform.rotation);
             }
         } 
-        for (int y = 0; y < mazeSize - 1;)
+        for (int y = 0; y < mazeSize - 1; y++)
         {
             for (int x = 0; x < mazeSize - 1; x++)
             {
