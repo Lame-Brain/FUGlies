@@ -31,7 +31,8 @@ public class Maze : MonoBehaviour
         {
             for (int x = 0; x < mazeSize - 1; x++)
             {
-                //doorLR[x, y] = Instantiate(mazeTilePF, new Vector3(x, y, 0), mazeTilePF.transform.rotation);
+                doorLR[x, y] = Instantiate(maze_LR_DoorPF, new Vector3(x + 0.5f, y, 0), maze_LR_DoorPF.transform.rotation);
+                doorUD[x, y] = Instantiate(maze_UD_DoorPF, new Vector3(x, y + 0.5f, 0), maze_UD_DoorPF.transform.rotation);
             }
         }
     }
