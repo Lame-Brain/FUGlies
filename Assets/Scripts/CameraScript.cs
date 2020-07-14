@@ -26,8 +26,8 @@ public class CameraScript : MonoBehaviour
             if (Input.GetAxis("Mouse Y") > 0) y = y - Camera_Speed * 2f; //mouse moves up
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") < 0) zoom -= 0.1f;
-        if (Input.GetAxis("Mouse ScrollWheel") > 0) zoom += 0.1f;
+        if (Input.GetAxis("Mouse ScrollWheel") < 0) zoom += 0.1f;
+        if (Input.GetAxis("Mouse ScrollWheel") > 0) zoom -= 0.1f;
 
         //WASD or ArrowKeys
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) y = y + Camera_Speed;
@@ -37,7 +37,7 @@ public class CameraScript : MonoBehaviour
 
         //bound camera movement
         if (x > 22) x = 22; if (x < -2) x = -2;
-        if (y > 22) y = 22; if (y < -2) y = -2;
+        if (y < -22) y = -22; if (y > 2) y = 2;
         if (zoom > 10) zoom = 10; if (zoom < 1) zoom = 1;
 
         Camera.main.transform.position = new Vector3(x, y, -10);
