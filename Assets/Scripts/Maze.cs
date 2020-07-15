@@ -75,7 +75,7 @@ public class Maze : MonoBehaviour
         {
             for (int x = 0; x < mazeSize; x++)
             {
-                if(mazeTile[x,y].drawn()) tile[x, y].SetActive(true);
+                if(mazeTile[x,y].Drawn()) tile[x, y].SetActive(true);
             }
         }
         for (int y = 0; y < mazeSize - 1; y++)
@@ -95,75 +95,97 @@ public class Maze : MonoBehaviour
 
     public void GenerateMaze()
     {
-        /*
-        // Set Maze Defaults
-        mazeTile[5, 4].SetDrawn(true); //These three tiles are empty with no connections. This helps hilight the middle cell as important
-        mazeTile[4, 5].SetDrawn(true);
-        mazeTile[6, 5].SetDrawn(true);
+        // Set Maze Default cells
+        mazeTile[4, 3].SetDrawn(true); mazeTile[4, 3].SetBlocked(true);//These three tiles are empty with no connections. This helps hilight the middle cell as important
+        mazeTile[3, 4].SetDrawn(true); mazeTile[3, 4].SetBlocked(true);
+        mazeTile[5, 4].SetDrawn(true); mazeTile[5, 4].SetBlocked(true);
 
-        mazeTile[5, 5].SetDrawn(true); // This is the middle tile. It has one connection to the south.
-        mazeTile[5, 5].SetConnected("south", true);
+        mazeTile[4, 4].SetDrawn(true); // This is the middle tile. It has one connection to the south.
+        mazeTile[4, 4].SetConnected("south", true);
+        mazeTile[4, 4].SetBlocked(true);
 
-        mazeTile[5, 6].SetDrawn(true); //This is the tile below the middle tile. It has connections to the north (set by the north tile), east (set by the east tile) and west.
-        mazeTile[4, 6].SetConnected("east", true);
-        mazeTile[5, 6].SetConnected("east", true); */
+        mazeTile[4, 5].SetDrawn(true); //This is the tile below the middle tile. It has connections to the north (set by the north tile), east (set by the east tile) and west.
+        mazeTile[4, 5].SetBlocked(true);
+        mazeTile[3, 5].SetConnected("east", true);
+        mazeTile[4, 5].SetConnected("east", true);
 
-        //Generate from Upper-Left corner
-        int x = 0, y = 0; bool done = false, found;
-        int northWeight = 2, eastWeight = 2, southWeight = 2, westWeight = 2;
-        int north, east, south, west, dir;
+        //set cells connected to default cells to flagged
+        mazeTile[3, 5].SetFlagged(true);
+        mazeTile[5, 5].SetFlagged(true);
+
+        bool done = false, found;
+        int x = 0, y = 0, north, east, south, west, heaviest;
+        //Loop until done = true
         while (!done)
         {
-            //draw current tile
-            Debug.Log("step 1, set drawn[" + x + ", " + y + "] to true");
-            mazeTile[x, y].SetDrawn(true);
-            
-            //roll the dice on directions
-            north = northWeight + Random.Range(0, 5); 
-            east = eastWeight + Random.Range(0, 5);
-            south = southWeight + Random.Range(0, 5);
-            west = westWeight + Random.Range(0, 5);
-
-            //  Bounds
-            if (y == 0) north = 0;     
-            if (y == mazeSize) south = 0;
-            if (x == 0) west = 0;
-            if (x == mazeSize) east = 0;
-
-            //Find the heaviest
-            dir = 0;
-            if (north > dir) dir = north;
-            if (south > dir) dir = south;
-            if (east > dir) dir = east;
-            if (west > dir) dir = west;
-
-            //Debug.Log("North is " + north + ", East is " + east + ", South is " + south + ", West is " + west + ", and Dir is " + dir);
-            if (dir == north) mazeTile[x, y - 1].SetConnected("south", true);
-            if (dir == east) mazeTile[x, y].SetConnected("east", true);
-            if (dir == south) mazeTile[x, y].SetConnected("south", true);
-            if (dir == west) mazeTile[x - 1, y].SetConnected("east", true);
-            
-            //Debug.Log("step 2, set east and south connections for [" + x + ", " + y + "] to true");
-            //Debug.Log("X : " + x + ", Y: " + y + " North = " + north + " East = " + east + " South = " + south + " West = " + west);
-            //Debug.Log("X : " + x + ", Y: " + y + "[] South Door? " + mazeTile[x, y].IsConnected("south") + ", East Door? " + mazeTile[x, y].IsConnected("east"));
-
-            //scan for next empty cell
-            Debug.Log("Step 3, start While !Found loop");
-            found = false; x = 0; y = 0;
-            while (!found)
-            {   
-                if (mazeTile[x, y].drawn())
+            //find a tile that is Flagged.
+            found = false;
+            for (int sy = 0; sy < mazeSize; sy++)
+            {
+                for (int sx = 0; sx < mazeSize; sx++)
                 {
-                    Debug.Log("IF MazeTile at " + x + ", " + y + " is not found, then increment x to " + (x + 1));
-                    x++;
-                    if (x == mazeSize) { x = 0; y++; Debug.Log("if x equals Map Size, set X to " + x + " and increment Y to " + y); }
-                    if (y == mazeSize) { found = true; done = true; Debug.Log("If Y equals Mapsize, found becomes True and we go back to step 1"); }
-                }
-                else
-                {
-                    found = true;
+                    if (mazeTile[sx, sy].IsFlagged()) { x = sx; y = sy; found = true; }
                 }
             }
+            for (int sy = 0; sy < mazeSize; sy++) //if no tiles are flagged, find one that has not been drawn.
+            {
+                for (int sx = 0; sx < mazeSize; sx++)
+                {
+                    if (!mazeTile[sx, sy].Drawn()) { x = sx; y = sy; found = true; }
+                }
+            }
+            if (found) //if tiles are found then do this big hunk of code below:
+            {
+                mazeTile[x, y].SetFlagged(false); //unflag that tile
+                mazeTile[x, y].SetDrawn(true);
+                //generate random connections, then set the connected cells to be unblocked
+                //I am using a weight system so I can generate multiple or single connections and integrate Bounding
+                north = 2 + Random.Range(0, 5); east = 2 + Random.Range(0, 5); south = 2 + Random.Range(0, 5); west = 2 + Random.Range(0, 5); heaviest = 0; //establish random weights
+                //weight a bit heavier to connect to cells with rooms
+                if (y > 0 && mazeTile[x, y - 1].Drawn()) north += 2;
+                if (x < mazeSize -1 && mazeTile[x + 1, y].Drawn()) east += 2;
+                if (y > mazeSize - 1 && mazeTile[x, y + 1].Drawn()) south += 2;
+                if (x < 0 && mazeTile[x - 1, y].Drawn()) west += 2;
+
+                if (y == 0) north = 0; if (y > 0 && mazeTile[x, y - 1].IsBlocked()) north = 0;                          //Establish bounds
+                if (y == mazeSize - 1) south = 0; if (y < mazeSize - 1 && mazeTile[x, y + 1].IsBlocked()) south = 0;
+                if (x == 0) west = 0; if (x > 0 && mazeTile[x - 1, y].IsBlocked()) west = 0;
+                if (x == mazeSize - 1) east = 0; if (x < mazeSize - 1 && mazeTile[x + 1, y].IsBlocked()) east = 0;
+
+                if (north > heaviest) heaviest = north; //Find the heaviest value
+                if (east > heaviest) heaviest = east;
+                if (south > heaviest) heaviest = south;
+                if (west > heaviest) heaviest = west;
+
+                if (heaviest == north)
+                {
+                    mazeTile[x, y - 1].SetConnected("south", true);
+                    if (!mazeTile[x, y - 1].Drawn()) mazeTile[x, y - 1].SetFlagged(true);
+                }
+                if (heaviest == east)
+                {
+                    mazeTile[x, y].SetConnected("east", true);
+                    if (!mazeTile[x + 1, y].Drawn()) mazeTile[x + 1, y].SetFlagged(true);
+                }
+                if (heaviest == south)
+                {
+                    mazeTile[x, y].SetConnected("south", true);
+                    if (!mazeTile[x, y + 1].Drawn()) mazeTile[x, y + 1].SetFlagged(true);
+                }
+                if (heaviest == west)
+                {
+                    mazeTile[x - 1, y].SetConnected("east", true);
+                    if (!mazeTile[x - 1, y].Drawn()) mazeTile[x - 1, y].SetFlagged(true);
+                }
+            }
+            if (!found) done = true;//if nothing was found, your done!
         }
     }
 }
+/* One possible algorithim:
+ * 1. Pick any random cell in the grid that is not blocked
+ * 2. Find a random neighboring cell that hasn't been visited yet.
+ * 3. If you find one, strip the wall between the current cell and the neighboring cell.
+ * 4. If you don't find one,  return to the previous cell.
+ * 5. Repeat steps 2 and 3  (or steps 2 and 4)  for every cell in the grid. 
+ */

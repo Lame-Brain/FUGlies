@@ -3,13 +3,17 @@
 
 public class MazeTileClass
 {
-    private bool west, south, draw;
+    private bool west, south, //connections present?
+                 draw, //should we draw this room? (also used in maze generation)
+                 blocked, //used in generation to designate pre-generated rooms
+                 flagged; //used in generation to designate cells that should be generated
 
     public MazeTileClass()
     {
         west = false;
         south = false;
         draw = false;
+        flagged = false;
     }
 
     public bool IsConnected(string dir)
@@ -29,7 +33,7 @@ public class MazeTileClass
         if (dir == "east") west = !west;
         if (dir == "south") south = !south;
     }
-    public bool drawn()
+    public bool Drawn()
     {
         return draw;
     }
@@ -40,6 +44,22 @@ public class MazeTileClass
     public void ToggleDrawn()
     {
         draw = !draw;
+    }
+    public bool IsBlocked()
+    {
+        return blocked;
+    }
+    public void SetBlocked(bool tf)
+    {
+        blocked = tf;
+    }
+    public bool IsFlagged()
+    {
+        return flagged;
+    }
+    public void SetFlagged(bool tf)
+    {
+        flagged = tf;
     }
     //866
     //207147977
