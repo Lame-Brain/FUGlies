@@ -10,7 +10,7 @@ public class CameraScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        zoom = 2;
+        zoom = 10;
     }
 
     // Update is called once per frame
@@ -36,8 +36,8 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) x = x + Camera_Speed;
 
         //bound camera movement
-        if (x > 22) x = 22; if (x < -2) x = -2;
-        if (y < -22) y = -22; if (y > 2) y = 2;
+        if (x > 32) x = 32; if (x < -2) x = -2;
+        if (y < -32) y = -32; if (y > 2) y = 2;
         if (zoom > 10) zoom = 10; if (zoom < 1) zoom = 1;
 
         Camera.main.transform.position = new Vector3(x, y, -10);
