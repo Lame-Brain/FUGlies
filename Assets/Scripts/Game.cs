@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Game: MonoBehaviour    
 {
-    public GameObject floorTilePF, WallPF;
+    public GameObject floorTilePF, WallPF, NDoorPF, EDoorPF, SDoorPF, WDoorPF;    
     public Sprite[] floorTileTextures;
     [HideInInspector]
     public GameObject[,] roomTile;
@@ -32,13 +32,19 @@ public class Game: MonoBehaviour
 
     public void DrawRoom(int tx, int ty)
     {
-        Debug.Log("I got X = " + tx + ", " + ty);
-        Debug.Log(GameManager.SAVE.mazeTile[0, 0].GetTileMap(0, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(1, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(2, 0) + " " + 
+        Debug.Log("I got X = " + tx + ", Y = " + ty);
+        /*Debug.Log(GameManager.SAVE.mazeTile[0, 0].GetTileMap(0, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(1, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(2, 0) + " " + 
             GameManager.SAVE.mazeTile[0, 0].GetTileMap(3, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(4, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(5, 0) + " " + 
             GameManager.SAVE.mazeTile[0, 0].GetTileMap(6, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(7, 0) + " " + GameManager.SAVE.mazeTile[0, 0].GetTileMap(8, 0) + " " + 
-            GameManager.SAVE.mazeTile[0, 0].GetTileMap(9, 0) + GameManager.SAVE.mazeTile[0, 0].GetTileMap(10, 0));
-        //int tx = GameManager.SAVE.focusX, ty = GameManager.SAVE.focusY;
+            GameManager.SAVE.mazeTile[0, 0].GetTileMap(9, 0) + GameManager.SAVE.mazeTile[0, 0].GetTileMap(10, 0)); */
+        Debug.Log("North Door? " + GameManager.SAVE.mazeTile[tx, ty - 1].IsConnected("south") + "\n");
+        Debug.Log("East Door? " + GameManager.SAVE.mazeTile[tx, ty].IsConnected("east") + "\n");
+        Debug.Log("South Door? " + GameManager.SAVE.mazeTile[tx, ty].IsConnected("south") + "\n");
+        Debug.Log("West Door? " + GameManager.SAVE.mazeTile[tx - 1, ty].IsConnected("east") + "\n");
+        Debug.Log("Test Test \n Test");
         
+        //int tx = GameManager.SAVE.focusX, ty = GameManager.SAVE.focusY;
+
         for (int y = 0; y < GameManager.SAVE.mazeTile[tx,ty].GetRoomSizeY()+1; y++)
         {
             for (int x = 0; x < GameManager.SAVE.mazeTile[tx, ty].GetRoomSizeX()+1; x++)
@@ -56,7 +62,12 @@ public class Game: MonoBehaviour
                     roomTile[x, y].SetActive(true);
                 }
             }
-            
-        } 
+        }
+        
+        if (ty > 0 && GameManager.SAVE.mazeTile[tx, ty - 1].IsConnected("south")) Instantiate(NDoorPF, new Vector3(GameManager.SAVE.mazeTile[tx, ty].GetRoomSizeX() / 2, 0, 0), Quaternion.identity);
+        if (GameManager.SAVE.mazeTile[tx, ty].IsConnected("south")) Instantiate(SDoorPF, new Vector3(GameManager.SAVE.mazeTile[tx, ty].GetRoomSizeX() / 2, -GameManager.SAVE.mazeTile[tx, ty].GetRoomSizeY(), 0), Quaternion.identity);
+        if (tx > 0 && GameManager.SAVE.mazeTile[tx - 1, ty].IsConnected("east")) Instantiate(WDoorPF, new Vector3(0, -GameManager.SAVE.mazeTile[tx, ty].GetRoomSizeY() / 2, 0), Quaternion.identity);
+        if (GameManager.SAVE.mazeTile[tx, ty].IsConnected("east")) Instantiate(EDoorPF, new Vector3(GameManager.SAVE.mazeTile[tx, ty].GetRoomSizeX(), -GameManager.SAVE.mazeTile[tx, ty].GetRoomSizeY() / 2, 0), Quaternion.identity);
+
     }
 }

@@ -6,7 +6,7 @@ public class Save
 {
     public int mazeSize = 9;
     public MazeTileClass[,] mazeTile;
-    public int focusX = 0, focusY = 0; //What cell of the maze are we looking at?
+    public int focusX = 4, focusY = 5; //What cell of the maze are we looking at?
 
     // Start is called before the first frame update
     void Start()

@@ -8,9 +8,9 @@ public class MazeTileClass
                  draw, //should we draw this room? (also used in maze generation)
                  blocked, //used in generation to designate pre-generated rooms
                  flagged; //used in generation to designate cells that should be generated    
-    private int[,] tile;
+    private int[,] tile, building;
     private int roomSizeX, roomSizeY;
-    private Color roomColor;
+    private Color roomColor;    
 
     public MazeTileClass()
     {
@@ -92,11 +92,13 @@ public class MazeTileClass
     public void MakeTileMap(int x, int y)
     {
         tile = new int[x, y];
-        for(int ly = 0; ly < y; ly++)
+        building = new int[x, y];
+        for (int ly = 0; ly < y; ly++)
         {
             for(int lx = 0; lx < x; lx++)
             {
                 tile[lx, ly] = Random.Range(0, 15);
+                building[lx, ly] = 0;
             }
         }
     }

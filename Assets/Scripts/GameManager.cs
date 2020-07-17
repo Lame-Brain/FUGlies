@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
         //Initialize maze
         SAVE.GenerateMaze(9);
         //Debug.Log(SAVE.mazeTile[0, 0].Drawn());
-        GAME.DrawRoom(0, 0);
+        GAME.DrawRoom(GameManager.SAVE.focusX, GameManager.SAVE.focusY);
     }
 
     // Update is called once per frame
