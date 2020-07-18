@@ -11,7 +11,7 @@ public class CameraScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        zoom = 10;         
+        zoom = 5;         
     }
 
     // Update is called once per frame
@@ -32,6 +32,8 @@ public class CameraScript : MonoBehaviour
 
         if (Input.GetAxis("Mouse ScrollWheel") < 0) zoom += 0.1f;
         if (Input.GetAxis("Mouse ScrollWheel") > 0) zoom -= 0.1f;
+        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.PageDown)) zoom += 0.05f;
+        if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.PageUp)) zoom -= 0.05f;
 
         //WASD or ArrowKeys
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) y = y + Camera_Speed;

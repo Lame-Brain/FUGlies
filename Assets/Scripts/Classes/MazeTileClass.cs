@@ -89,6 +89,10 @@ public class MazeTileClass
     {
         return tile[x,y];
     }
+    public int GetBuilding(int x, int y)
+    {
+        return building[x, y];
+    }
     public void MakeTileMap(int x, int y)
     {
         tile = new int[x, y];
@@ -101,5 +105,16 @@ public class MazeTileClass
                 building[lx, ly] = 0;
             }
         }
+    }
+    public void updateBuilding(string bn, int x, int y)
+    {
+        int b = 0;
+        if (bn == "hut") b = 1;
+        if (bn == "forge") b = 2;
+        if (bn == "alchemist") b = 3;
+        if (bn == "totem") b = 4;
+        if (bn == "sign") b = 5;
+        if (bn == "garden") b = 6;
+        building[x, y] = b;
     }
 }

@@ -23,7 +23,13 @@ public class GameManager : MonoBehaviour
     {
         //Initialize maze
         SAVE.GenerateMaze(9);
-        //Debug.Log(SAVE.mazeTile[0, 0].Drawn());
+        //TEST
+        GAME.AddFUG(new Vector3(Random.Range(1f, 15f), -Random.Range(1f, 15f), 0));
+        GAME.AddFUG(new Vector3(Random.Range(1f, 15f), -Random.Range(1f, 15f), 0));
+        GAME.AddFUG(new Vector3(Random.Range(1f, 15f), -Random.Range(1f, 15f), 0));
+        GAME.AddFUG(new Vector3(Random.Range(1f, 15f), -Random.Range(1f, 15f), 0));
+        GAME.AddFUG(new Vector3(Random.Range(1f, 15f), -Random.Range(1f, 15f), 0));
+        SAVE.mazeTile[SAVE.focusX, SAVE.focusY].updateBuilding("hut", 5, 5);
         GAME.DrawRoom(GameManager.SAVE.focusX, GameManager.SAVE.focusY);
     }
 
